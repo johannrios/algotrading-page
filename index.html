@@ -51,11 +51,17 @@
 
   <title>AlgoTrading Nexus — Trading Algorítmico de Alta Precisión</title>
 
-  <!-- Google Fonts: Syne (display) + JetBrains Mono (código/datos) + Instrument Serif (body elegante) -->
+  <!--
+    Google Fonts:
+    - Barlow Condensed: para títulos hero (condensada, no se estira horizontalmente)
+    - Syne: para UI, navegación y etiquetas
+    - JetBrains Mono: para datos numéricos y código
+    - Instrument Serif: para cuerpo de texto (legible, elegante)
+  -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&family=Instrument+Serif:ital@0;1&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&family=Instrument+Serif:ital@0;1&display=swap"
     rel="stylesheet" />
 
   <style>
@@ -83,13 +89,14 @@
       --color-crimson-dim: rgba(255, 71, 87, 0.15);
 
       --color-text:        #e8e2d5;
-      --color-text-muted:  #8a9ab5;
-      --color-text-dim:    #4a5a78;
+      --color-text-muted:  #a8b8d0; /* Era #8a9ab5 — más claro para mejor legibilidad */
+      --color-text-dim:    #5a6a88; /* Era #4a5a78 — también más claro               */
 
       /* Tipografía */
-      --font-display: 'Syne', sans-serif;
-      --font-body:    'Instrument Serif', Georgia, serif;
-      --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+      --font-hero:    'Barlow Condensed', 'Arial Narrow', sans-serif; /* Títulos principales: condensada, no se estira */
+      --font-display: 'Syne', sans-serif;                              /* UI, nav, etiquetas                           */
+      --font-body:    'Instrument Serif', Georgia, serif;              /* Cuerpo de texto: elegante y legible          */
+      --font-mono:    'JetBrains Mono', 'Courier New', monospace;      /* Datos numéricos, código                      */
 
       /* Espaciado modular (base 8px) */
       --space-xs:  0.5rem;
@@ -121,15 +128,15 @@
 
     html {
       scroll-behavior: smooth;
-      font-size: 16px;
+      font-size: 17px; /* Era 16px — base más grande mejora legibilidad en todos los elementos */
     }
 
     body {
       background-color: var(--color-abyss);
       color: var(--color-text);
       font-family: var(--font-body);
-      font-size: 1.0625rem;
-      line-height: 1.7;
+      font-size: 1.1rem;    /* Era 1.0625rem (~17px) — ahora ~18.7px, cómodo para lectura */
+      line-height: 1.8;     /* Era 1.7 — más aire entre líneas */
       overflow-x: hidden;
 
       /* Textura de ruido sutil — profundidad visual sin imágenes externas */
@@ -358,11 +365,15 @@
     }
 
     .hero-title {
-      font-family: var(--font-display);
-      font-size: clamp(2.8rem, 7vw, 6rem);
+      /* CAMBIO CLAVE: Barlow Condensed es una fuente diseñada para titulares
+         grandes — sus letras son verticalmente altas pero horizontalmente
+         compactas. Esto elimina el efecto de "letras aplastadas" que tenía Syne
+         en tamaños muy grandes (>4rem). */
+      font-family: var(--font-hero);
+      font-size: clamp(3rem, 8vw, 7rem); /* Un poco más grande porque Barlow Condensed tiene menor ancho */
       font-weight: 800;
-      line-height: 1.05;
-      letter-spacing: -0.02em;
+      line-height: 1.0;
+      letter-spacing: 0.01em; /* Mínimo — Barlow Condensed no necesita tracking negativo */
       margin-bottom: var(--space-sm);
       animation: fadeUp 0.7s 0.1s ease both;
     }
@@ -379,10 +390,11 @@
     .hero-subtitle {
       font-family: var(--font-body);
       font-style: italic;
-      font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+      font-size: clamp(1.1rem, 2.5vw, 1.4rem); /* Era 1.05–1.35rem — subimos el mínimo */
       color: var(--color-text-muted);
-      max-width: 600px;
+      max-width: 620px;
       margin: 0 auto var(--space-md);
+      line-height: 1.75;
       animation: fadeUp 0.7s 0.2s ease both;
     }
 
@@ -986,39 +998,224 @@
     .footer-bottom a:hover { color: var(--color-jade); }
 
     /* =============================================
-       RESPONSIVE
+       RESPONSIVE — BREAKPOINTS COMPLETOS
+       Estrategia: Mobile-first desde 320px.
+       Los media queries amplían, no reducen.
+
+       Breakpoints:
+         < 480px  → Móvil pequeño (iPhone SE, Galaxy A)
+         481–768px → Móvil grande / phablet
+         769–900px → Tablet vertical
+         > 900px  → Desktop (estilos base)
        ============================================= */
+
+    /* --- TABLET VERTICAL (≤ 900px) --- */
     @media (max-width: 900px) {
+
+      /* Layouts de grid pasan a columna única */
       .intro-grid,
       .main-aside-layout,
       .footer-inner {
         grid-template-columns: 1fr;
       }
 
+      /* Formulario: columnas colapsadas */
       .form-row {
         grid-template-columns: 1fr;
       }
 
+      /* Stats del hero: separación reducida */
       .hero-stats {
         gap: var(--space-md);
       }
 
+      /* Nav: menos gap entre items */
       nav[aria-label="Navegación principal"] ul {
         gap: var(--space-sm);
       }
 
+      /* Aside: deja de ser sticky en tablet */
       aside[aria-label="Panel de datos de mercado"] {
         position: static;
       }
+
+      /* Sección intro: imagen debajo del texto */
+      .intro-visual {
+        order: 2;
+      }
+      .intro-text {
+        order: 1;
+      }
+
+      /* Título hero: tamaño razonable en tablet */
+      .hero-title {
+        font-size: clamp(3rem, 10vw, 5.5rem);
+      }
     }
 
-    @media (max-width: 600px) {
+    /* --- MÓVIL GRANDE / PHABLET (≤ 768px) --- */
+    @media (max-width: 768px) {
+
+      /* Espaciado general reducido */
       :root {
         --space-lg: 3rem;
+        --space-xl: 5rem;
+      }
+
+      /* Header más compacto */
+      .header-inner {
+        height: 60px;
+        padding: 0 var(--space-sm);
+      }
+
+      /* Nav: ocultar texto de items excepto CTA */
+      nav[aria-label="Navegación principal"] a:not(.nav-cta) {
+        font-size: 0.72rem;
+        letter-spacing: 0.06em;
+      }
+
+      /* Hero: centrado, menos padding */
+      .hero {
+        padding: 4rem var(--space-sm);
+        min-height: 80vh;
+      }
+
+      /* Título hero: clamp ajustado a móvil */
+      .hero-title {
+        font-size: clamp(2.8rem, 12vw, 4.5rem);
+        line-height: 1.05;
+      }
+
+      /* Subtítulo más legible en pantalla pequeña */
+      .hero-subtitle {
+        font-size: 1.1rem;
+        max-width: 100%;
+      }
+
+      /* Botones: apilados verticalmente */
+      .hero-actions {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.75rem;
+      }
+
+      .btn-primary,
+      .btn-secondary {
+        width: 100%;
+        max-width: 320px;
+        justify-content: center;
+        font-size: 0.9rem;
+        padding: 1rem 1.5rem;
+      }
+
+      /* Stats: 2 columnas en vez de 4 */
+      .hero-stats {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--space-sm);
+        max-width: 400px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      /* Cards de estrategias: ancho completo */
+      .strategies-grid {
+        grid-template-columns: 1fr;
+      }
+
+      /* Sección de contacto: menos padding */
+      #contacto {
+        padding: var(--space-lg) var(--space-sm);
+      }
+
+      /* Footer: apilado */
+      .footer-inner {
+        gap: var(--space-md);
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+        gap: 0.5rem;
+      }
+
+      /* Texto de párrafos: tamaño adecuado para móvil */
+      body {
+        font-size: 1.05rem;
+        line-height: 1.75;
+      }
+
+      /* Section titles en móvil */
+      .section-title {
+        font-size: clamp(1.6rem, 7vw, 2.2rem);
+      }
+    }
+
+    /* --- MÓVIL PEQUEÑO (≤ 480px) --- */
+    @media (max-width: 480px) {
+
+      :root {
+        --space-md: 1.25rem;
+        --space-lg: 2.5rem;
         --space-xl: 4rem;
       }
 
+      /* Ocultar botón CTA en nav — sin espacio */
       .nav-cta { display: none; }
+
+      /* Marca en header: solo logo + nombre corto */
+      .brand-name {
+        font-size: 1rem;
+      }
+
+      /* Título hero más compacto */
+      .hero-title {
+        font-size: clamp(2.4rem, 14vw, 3.8rem);
+      }
+
+      /* Stats en una columna en pantallas muy pequeñas */
+      .hero-stats {
+        grid-template-columns: 1fr 1fr;
+        gap: 1rem;
+      }
+
+      .stat-value {
+        font-size: 1.6rem;
+      }
+
+      /* Cards: padding reducido */
+      article.strategy-card {
+        padding: 1.25rem;
+      }
+
+      /* Aside panels más compactos */
+      .aside-panel {
+        padding: 1rem;
+      }
+
+      /* Formulario: campos full-width siempre */
+      .field-group input,
+      .field-group select,
+      .field-group textarea {
+        font-size: 1rem; /* Evita zoom automático en iOS (mín. 16px) */
+      }
+
+      /* Footer bottom: texto aún más pequeño */
+      .footer-bottom p {
+        font-size: 0.65rem;
+      }
+    }
+
+    /* --- ACCESIBILIDAD: Movimiento reducido --- */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+      .ticker-inner {
+        animation: none;
+      }
     }
   </style>
 </head>
