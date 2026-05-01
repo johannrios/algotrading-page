@@ -38,7 +38,7 @@ algotrading-page/
 
 ### Opción B — Clonar con Git
 ```bash
-git clone https://github.com/TU_USUARIO/algotrading-page.git
+git clone https://github.com/johannrios/algotrading-page.git
 cd algotrading-page
 # Abrir index.html en el navegador
 open index.html        # macOS
