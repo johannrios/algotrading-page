@@ -49,7 +49,7 @@ start index.html       # Windows
 ### Opción C — GitHub Pages (sin descargar nada)
 Accede directamente en el navegador:
 ```
-https://TU_USUARIO.github.io/algotrading-page/
+https://johannrios.github.io/algotrading-page/
 ```
 
 ---
