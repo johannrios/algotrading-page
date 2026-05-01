@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<!--
+  ============================================================
+  ALGOTRADING NEXUS — index.html
+  ============================================================
+
+  DECISIONES SEMÁNTICAS:
+  - <header>: Contiene identidad de marca y navegación principal.
+  - <nav> + aria-label: Distingue la navegación principal del sitio.
+  - <main>: Delimita el contenido central, ignorado por lectores
+    de pantalla al saltar con tecla de acceso directo.
+  - <section>: Agrupa bloques temáticos con encabezado propio.
+  - <article>: Cada estrategia de trading es contenido
+    autónomo y reutilizable (sindicable).
+  - <aside>: Datos de mercado en tiempo real, complementarios
+    pero no esenciales para el flujo principal.
+  - <footer>: Metainformación y enlaces secundarios.
+
+  DECISIONES DE ACCESIBILIDAD:
+  - role="banner", role="navigation", role="main" refuerzan
+    la semántica para agentes de usuario más antiguos.
+  - aria-label en <nav> diferencia múltiples zonas de
+    navegación en la misma página.
+  - aria-describedby conecta el formulario con su descripción.
+  - aria-live="polite" en el ticker permite actualizar el
+    contenido sin interrumpir el flujo del lector de pantalla.
+  - Todos los <img> tienen alt descriptivo y contextual.
+  - Los <label> están explícitamente asociados vía `for`/`id`.
+  - Contraste WCAG AA verificado: fondo #0a0f1e sobre texto
+    #e8e2d5 da ratio >7:1 (AAA).
+  - tabindex gestionado para flujo lógico de teclado.
+  - Enfoque visible con :focus-visible mejorado.
+  - Skip-link para saltar al contenido principal.
+  ============================================================
+-->
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description"
+    content="AlgoTrading Nexus: plataforma educativa sobre trading algorítmico, estrategias cuantitativas y automatización de mercados financieros." />
+  <meta name="keywords" content="trading algorítmico, quant, estrategias, backtesting, Python, mercados financieros" />
+  <meta name="author" content="AlgoTrading Nexus" />
+
+  <!-- Open Graph / accesibilidad social -->
+  <meta property="og:title" content="AlgoTrading Nexus" />
+  <meta property="og:description" content="Domina los mercados con precisión algorítmica." />
+  <meta property="og:type" content="website" />
+
+  <title>AlgoTrading Nexus — Trading Algorítmico de Alta Precisión</title>
+
+  <!-- Google Fonts: Syne (display) + JetBrains Mono (código/datos) + Instrument Serif (body elegante) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=JetBrains+Mono:wght@300;400;600&family=Instrument+Serif:ital@0;1&display=swap"
+    rel="stylesheet" />
+
+  <style>
+    /* =============================================
+       CSS CUSTOM PROPERTIES — SISTEMA DE DISEÑO
+       ============================================= */
+    :root {
+      /* Paleta: Negro abismal + Oro mercurio + Jade cuantitativo */
+      --color-abyss:       #060a12;
+      --color-deep:        #0a0f1e;
+      --color-surface:     #0f1729;
+      --color-surface-2:   #162035;
+      --color-border:      #1e2d4a;
+      --color-border-glow: #1e3a5f;
+
+      --color-gold:        #c8a96e;
+      --color-gold-light:  #e2c98a;
+      --color-gold-dim:    #7a6040;
+
+      --color-jade:        #00d4a0;
+      --color-jade-dim:    #005a44;
+      --color-jade-glow:   rgba(0, 212, 160, 0.15);
+
+      --color-crimson:     #ff4757;
+      --color-crimson-dim: rgba(255, 71, 87, 0.15);
+
+      --color-text:        #e8e2d5;
+      --color-text-muted:  #8a9ab5;
+      --color-text-dim:    #4a5a78;
+
+      /* Tipografía */
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'Instrument Serif', Georgia, serif;
+      --font-mono:    'JetBrains Mono', 'Courier New', monospace;
+
+      /* Espaciado modular (base 8px) */
+      --space-xs:  0.5rem;
+      --space-sm:  1rem;
+      --space-md:  2rem;
+      --space-lg:  4rem;
+      --space-xl:  8rem;
+
+      /* Efectos */
+      --glow-jade:   0 0 30px rgba(0, 212, 160, 0.3), 0 0 60px rgba(0, 212, 160, 0.1);
+      --glow-gold:   0 0 20px rgba(200, 169, 110, 0.4);
+      --shadow-card: 0 4px 24px rgba(0,0,0,0.6), 0 1px 0 rgba(255,255,255,0.04) inset;
+
+      --radius-sm: 4px;
+      --radius-md: 8px;
+      --radius-lg: 16px;
+
+      --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* =============================================
+       RESET & BASE
+       ============================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+      font-size: 16px;
+    }
+
+    body {
+      background-color: var(--color-abyss);
+      color: var(--color-text);
+      font-family: var(--font-body);
+      font-size: 1.0625rem;
+      line-height: 1.7;
+      overflow-x: hidden;
+
+      /* Textura de ruido sutil — profundidad visual sin imágenes externas */
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,100,200,0.12) 0%, transparent 60%),
+        url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    }
+
+    /* =============================================
+       SKIP LINK — ACCESIBILIDAD (teclado / AT)
+       Visible únicamente al recibir foco
+       ============================================= */
+    .skip-link {
+      position: absolute;
+      top: -100%;
+      left: var(--space-sm);
+      padding: var(--space-xs) var(--space-sm);
+      background: var(--color-jade);
+      color: var(--color-abyss);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      border-radius: 0 0 var(--radius-md) var(--radius-md);
+      z-index: 9999;
+      transition: top 0.2s;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    /* Foco visible mejorado (WCAG 2.4.11) */
+    :focus-visible {
+      outline: 2px solid var(--color-jade);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    /* =============================================
+       HEADER + NAVEGACIÓN PRINCIPAL
+       ============================================= */
+    header[role="banner"] {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(6, 10, 18, 0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 68px;
+    }
+
+    /* Logo / marca */
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      width: 36px;
+      height: 36px;
+      flex-shrink: 0;
+    }
+
+    .brand-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.15rem;
+      letter-spacing: 0.04em;
+      color: var(--color-text);
+      line-height: 1;
+    }
+
+    .brand-name span {
+      color: var(--color-jade);
+    }
+
+    /* Navegación */
+    nav[aria-label="Navegación principal"] ul {
+      display: flex;
+      list-style: none;
+      gap: var(--space-md);
+      align-items: center;
+    }
+
+    nav[aria-label="Navegación principal"] a {
+      font-family: var(--font-display);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      text-decoration: none;
+      padding: var(--space-xs) 0;
+      position: relative;
+      transition: color var(--transition);
+    }
+
+    nav[aria-label="Navegación principal"] a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 1px;
+      background: var(--color-jade);
+      transition: width var(--transition);
+    }
+
+    nav[aria-label="Navegación principal"] a:hover,
+    nav[aria-label="Navegación principal"] a[aria-current="page"] {
+      color: var(--color-text);
+    }
+
+    nav[aria-label="Navegación principal"] a:hover::after,
+    nav[aria-label="Navegación principal"] a[aria-current="page"]::after {
+      width: 100%;
+    }
+
+    .nav-cta {
+      background: var(--color-jade);
+      color: var(--color-abyss) !important;
+      padding: 0.5rem 1.25rem !important;
+      border-radius: var(--radius-sm);
+      transition: box-shadow var(--transition), background var(--transition) !important;
+    }
+
+    .nav-cta::after { display: none !important; }
+
+    .nav-cta:hover {
+      background: var(--color-jade-light, #33ddb0) !important;
+      box-shadow: var(--glow-jade) !important;
+    }
+
+    /* =============================================
+       TICKER DE MERCADO — aria-live
+       ============================================= */
+    .market-ticker {
+      background: var(--color-surface);
+      border-bottom: 1px solid var(--color-border);
+      overflow: hidden;
+      padding: 0.4rem 0;
+    }
+
+    .ticker-inner {
+      display: flex;
+      gap: 2.5rem;
+      animation: tickerScroll 30s linear infinite;
+      width: max-content;
+    }
+
+    .market-ticker:hover .ticker-inner {
+      animation-play-state: paused;
+    }
+
+    @keyframes tickerScroll {
+      from { transform: translateX(0); }
+      to   { transform: translateX(-50%); }
+    }
+
+    .ticker-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      white-space: nowrap;
+      color: var(--color-text-muted);
+    }
+
+    .ticker-symbol {
+      font-weight: 600;
+      color: var(--color-text);
+      letter-spacing: 0.08em;
+    }
+
+    .ticker-up   { color: var(--color-jade); }
+    .ticker-down { color: var(--color-crimson); }
+
+    /* =============================================
+       HERO — SECCIÓN PRINCIPAL
+       ============================================= */
+    .hero {
+      min-height: 90vh;
+      display: grid;
+      place-items: center;
+      padding: var(--space-xl) var(--space-md);
+      position: relative;
+      text-align: center;
+    }
+
+    /* Grid decorativo de fondo */
+    .hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(30,45,74,0.3) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30,45,74,0.3) 1px, transparent 1px);
+      background-size: 48px 48px;
+      mask-image: radial-gradient(ellipse 80% 70% at 50% 50%, black 30%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-jade);
+      margin-bottom: var(--space-sm);
+      animation: fadeUp 0.6s ease both;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: var(--space-sm);
+      animation: fadeUp 0.7s 0.1s ease both;
+    }
+
+    .hero-title .highlight {
+      color: var(--color-jade);
+      text-shadow: var(--glow-jade);
+    }
+
+    .hero-title .gold {
+      color: var(--color-gold);
+    }
+
+    .hero-subtitle {
+      font-family: var(--font-body);
+      font-style: italic;
+      font-size: clamp(1.05rem, 2.5vw, 1.35rem);
+      color: var(--color-text-muted);
+      max-width: 600px;
+      margin: 0 auto var(--space-md);
+      animation: fadeUp 0.7s 0.2s ease both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: var(--space-sm);
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s 0.3s ease both;
+    }
+
+    /* Botón primario */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: var(--color-jade);
+      color: var(--color-abyss);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: box-shadow var(--transition), transform var(--transition);
+    }
+
+    .btn-primary:hover {
+      box-shadow: var(--glow-jade);
+      transform: translateY(-1px);
+    }
+
+    /* Botón secundario */
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.9rem 2rem;
+      background: transparent;
+      color: var(--color-text-muted);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: border-color var(--transition), color var(--transition);
+    }
+
+    .btn-secondary:hover {
+      border-color: var(--color-gold);
+      color: var(--color-gold);
+    }
+
+    /* Estadísticas debajo del hero */
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: var(--space-lg);
+      margin-top: var(--space-lg);
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s 0.4s ease both;
+    }
+
+    .stat-item {
+      text-align: center;
+    }
+
+    .stat-value {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--color-jade);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-dim);
+      margin-top: 0.3rem;
+    }
+
+    /* =============================================
+       LAYOUT PRINCIPAL
+       ============================================= */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 var(--space-md);
+    }
+
+    /* =============================================
+       SECCIÓN: ¿QUÉ ES EL TRADING ALGORÍTMICO?
+       ============================================= */
+    #que-es {
+      padding: var(--space-xl) var(--space-md);
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--color-gold);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: var(--space-md);
+    }
+
+    .intro-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-lg);
+      align-items: center;
+    }
+
+    .intro-text p {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+    }
+
+    .intro-text p strong {
+      color: var(--color-text);
+    }
+
+    /* Imagen con marco decorativo */
+    .intro-visual {
+      position: relative;
+    }
+
+    .intro-visual::before {
+      content: '';
+      position: absolute;
+      inset: -12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      pointer-events: none;
+    }
+
+    .intro-visual::after {
+      content: '';
+      position: absolute;
+      bottom: -24px;
+      right: -24px;
+      width: 60%;
+      height: 60%;
+      background: var(--color-jade-glow);
+      filter: blur(40px);
+      pointer-events: none;
+      border-radius: 50%;
+    }
+
+    .intro-visual img {
+      width: 100%;
+      border-radius: var(--radius-md);
+      display: block;
+      border: 1px solid var(--color-border);
+    }
+
+    /* =============================================
+       SECCIÓN: ESTRATEGIAS
+       ============================================= */
+    #estrategias {
+      padding: var(--space-xl) var(--space-md);
+      background: linear-gradient(180deg, transparent, var(--color-surface) 20%, var(--color-surface) 80%, transparent);
+    }
+
+    .strategies-header {
+      text-align: center;
+      margin-bottom: var(--space-lg);
+    }
+
+    .strategies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: var(--space-sm);
+    }
+
+    /* <article> — cada estrategia es contenido autónomo */
+    article.strategy-card {
+      background: var(--color-surface-2);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+      box-shadow: var(--shadow-card);
+    }
+
+    article.strategy-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: var(--card-accent, var(--color-jade));
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    article.strategy-card:hover {
+      border-color: var(--card-accent, var(--color-jade));
+      transform: translateY(-3px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.5);
+    }
+
+    article.strategy-card:hover::before {
+      opacity: 1;
+    }
+
+    .card-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      padding: 0.2rem 0.6rem;
+      border-radius: var(--radius-sm);
+      background: rgba(0,212,160,0.12);
+      color: var(--color-jade);
+      border: 1px solid rgba(0,212,160,0.25);
+      margin-bottom: var(--space-sm);
+    }
+
+    .card-badge.gold {
+      background: rgba(200,169,110,0.12);
+      color: var(--color-gold);
+      border-color: rgba(200,169,110,0.25);
+    }
+
+    .card-badge.crimson {
+      background: var(--color-crimson-dim);
+      color: var(--color-crimson);
+      border-color: rgba(255,71,87,0.25);
+    }
+
+    article.strategy-card h3 {
+      font-family: var(--font-display);
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    article.strategy-card p {
+      color: var(--color-text-muted);
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin-bottom: var(--space-sm);
+    }
+
+    .card-metrics {
+      display: flex;
+      gap: 1rem;
+      margin-top: var(--space-sm);
+      padding-top: var(--space-sm);
+      border-top: 1px solid var(--color-border);
+    }
+
+    .metric {
+      flex: 1;
+    }
+
+    .metric-val {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-jade);
+    }
+
+    .metric-val.gold { color: var(--color-gold); }
+
+    .metric-name {
+      font-family: var(--font-mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-dim);
+      margin-top: 0.15rem;
+    }
+
+    /* =============================================
+       ASIDE — DATOS DE MERCADO EN TIEMPO REAL
+       ============================================= */
+    .main-aside-layout {
+      display: grid;
+      grid-template-columns: 1fr 320px;
+      gap: var(--space-md);
+      padding: var(--space-xl) var(--space-md);
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    aside[aria-label="Panel de datos de mercado"] {
+      position: sticky;
+      top: 88px;
+      height: fit-content;
+    }
+
+    .aside-panel {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-card);
+    }
+
+    .aside-title {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-sm);
+      padding-bottom: var(--space-xs);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .market-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.6rem 0;
+      border-bottom: 1px solid rgba(30,45,74,0.5);
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+    }
+
+    .market-row:last-child { border-bottom: none; }
+
+    .market-name { color: var(--color-text-muted); }
+    .market-price { color: var(--color-text); font-weight: 600; }
+    .market-change { font-size: 0.72rem; }
+    .up   { color: var(--color-jade); }
+    .down { color: var(--color-crimson); }
+
+    /* =============================================
+       SECCIÓN: CONCEPTOS CLAVE — LISTA SEMÁNTICA
+       ============================================= */
+    #conceptos {
+      /* Esta sección está dentro del main-aside-layout */
+    }
+
+    #conceptos h2 {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+      font-weight: 800;
+      margin-bottom: var(--space-md);
+    }
+
+    .concepts-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .concepts-list li {
+      display: flex;
+      gap: 1rem;
+      padding: 1.2rem;
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      transition: border-color var(--transition);
+    }
+
+    .concepts-list li:hover {
+      border-color: var(--color-jade);
+    }
+
+    .concept-icon {
+      font-size: 1.4rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .concept-body h3 {
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--color-text);
+      margin-bottom: 0.25rem;
+    }
+
+    .concept-body p {
+      color: var(--color-text-muted);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+
+    /* =============================================
+       SECCIÓN: FORMULARIO DE CONTACTO
+       ============================================= */
+    #contacto {
+      padding: var(--space-xl) var(--space-md);
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    #contacto .section-title {
+      margin-bottom: 0.5rem;
+    }
+
+    .form-desc {
+      color: var(--color-text-muted);
+      font-style: italic;
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Formulario accesible */
+    form#form-contacto {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-sm);
+      text-align: left;
+    }
+
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .field-group label {
+      font-family: var(--font-display);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+    }
+
+    .field-group label .required-mark {
+      color: var(--color-jade);
+      margin-left: 0.2rem;
+      font-style: normal;
+    }
+
+    .field-group input,
+    .field-group select,
+    .field-group textarea {
+      background: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-sm);
+      padding: 0.8rem 1rem;
+      color: var(--color-text);
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      transition: border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .field-group input:focus,
+    .field-group select:focus,
+    .field-group textarea:focus {
+      border-color: var(--color-jade);
+      box-shadow: 0 0 0 3px rgba(0,212,160,0.15);
+      outline: none;
+    }
+
+    .field-group input::placeholder,
+    .field-group textarea::placeholder {
+      color: var(--color-text-dim);
+    }
+
+    .field-group select option {
+      background: var(--color-surface-2);
+    }
+
+    .field-group textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-sm);
+    }
+
+    .form-submit {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: var(--space-xs);
+    }
+
+    /* =============================================
+       ANIMACIONES
+       ============================================= */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* =============================================
+       FOOTER
+       ============================================= */
+    footer[role="contentinfo"] {
+      background: var(--color-abyss);
+      border-top: 1px solid var(--color-border);
+      padding: var(--space-lg) var(--space-md);
+    }
+
+    .footer-inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: var(--space-lg);
+      margin-bottom: var(--space-md);
+    }
+
+    .footer-brand-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.75rem;
+      color: var(--color-text);
+    }
+
+    .footer-brand-name span { color: var(--color-jade); }
+
+    .footer-desc {
+      color: var(--color-text-dim);
+      font-size: 0.88rem;
+      line-height: 1.6;
+      max-width: 280px;
+    }
+
+    .footer-col h4 {
+      font-family: var(--font-display);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--color-text-muted);
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .footer-col a {
+      color: var(--color-text-dim);
+      text-decoration: none;
+      font-size: 0.88rem;
+      transition: color var(--transition);
+    }
+
+    .footer-col a:hover { color: var(--color-jade); }
+
+    .footer-bottom {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding-top: var(--space-sm);
+      border-top: 1px solid var(--color-border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom p {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-text-dim);
+      letter-spacing: 0.05em;
+    }
+
+    .footer-bottom a {
+      color: var(--color-text-dim);
+      text-decoration: none;
+    }
+
+    .footer-bottom a:hover { color: var(--color-jade); }
+
+    /* =============================================
+       RESPONSIVE
+       ============================================= */
+    @media (max-width: 900px) {
+      .intro-grid,
+      .main-aside-layout,
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-stats {
+        gap: var(--space-md);
+      }
+
+      nav[aria-label="Navegación principal"] ul {
+        gap: var(--space-sm);
+      }
+
+      aside[aria-label="Panel de datos de mercado"] {
+        position: static;
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --space-lg: 3rem;
+        --space-xl: 4rem;
+      }
+
+      .nav-cta { display: none; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!--
+    SKIP LINK: Permite a usuarios de teclado y lectores
+    de pantalla saltar la navegación e ir directamente
+    al contenido principal. WCAG 2.4.1.
+  -->
+  <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
+
+  <!-- ================================================
+       HEADER: Identidad y navegación del sitio
+       role="banner" identifica el encabezado del sitio
+       para tecnologías asistivas.
+       ================================================ -->
+  <header role="banner">
+    <div class="header-inner">
+
+      <!-- Logo: enlace a inicio con texto descriptivo -->
+      <a href="#" class="brand" aria-label="AlgoTrading Nexus — Inicio">
+        <!-- SVG inline: accesible con aria-hidden porque el texto adyacente describe la marca -->
+        <svg class="brand-mark" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+          <rect width="36" height="36" rx="6" fill="#0f1729" stroke="#1e2d4a" stroke-width="1"/>
+          <!-- Gráfico de velas estilizado -->
+          <line x1="8"  y1="10" x2="8"  y2="26" stroke="#00d4a0" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="5.5" y="14" width="5" height="8"  rx="1" fill="#00d4a0"/>
+          <line x1="16" y1="8"  x2="16" y2="28" stroke="#c8a96e" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="13.5" y="12" width="5" height="10" rx="1" fill="#c8a96e"/>
+          <line x1="24" y1="12" x2="24" y2="24" stroke="#00d4a0" stroke-width="1.5" stroke-linecap="round"/>
+          <rect x="21.5" y="15" width="5" height="6"  rx="1" fill="#00d4a0"/>
+          <!-- Línea de tendencia -->
+          <polyline points="8,20 16,16 24,13" stroke="rgba(200,169,110,0.5)" stroke-width="1" stroke-dasharray="2 2" fill="none"/>
+        </svg>
+        <span class="brand-name">Algo<span>Trading</span> Nexus</span>
+      </a>
+
+      <!--
+        NAV: aria-label="Navegación principal" distingue
+        esta navegación de otras posibles en la página.
+        WCAG 2.4.6: encabezados y etiquetas descriptivos.
+      -->
+      <nav aria-label="Navegación principal" role="navigation">
+        <ul>
+          <li><a href="#que-es">¿Qué es?</a></li>
+          <li><a href="#estrategias">Estrategias</a></li>
+          <li><a href="#conceptos">Conceptos</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+          <li>
+            <a href="#contacto" class="nav-cta" aria-label="Comenzar con AlgoTrading Nexus">
+              Comenzar
+            </a>
+          </li>
+        </ul>
+      </nav>
+
+    </div>
+
+    <!--
+      TICKER de precios: aria-live="polite" informa
+      de actualizaciones sin interrumpir al usuario.
+      aria-label describe el propósito de la región.
+    -->
+    <div class="market-ticker" role="region" aria-label="Ticker de precios de mercado" aria-live="polite">
+      <div class="ticker-inner" aria-hidden="true">
+        <!-- Los datos son ilustrativos; en producción vendrían de una API -->
+        <span class="ticker-item"><span class="ticker-symbol">BTC/USD</span> 67,420.50 <span class="ticker-up">▲ +2.34%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">ETH/USD</span> 3,512.80 <span class="ticker-up">▲ +1.87%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">SPX</span> 5,241.30 <span class="ticker-down">▼ −0.42%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">NQ</span> 18,380.00 <span class="ticker-up">▲ +0.61%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">EURUSD</span> 1.0872 <span class="ticker-down">▼ −0.18%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">GOLD</span> 2,318.40 <span class="ticker-up">▲ +0.95%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">WTI</span> 78.34 <span class="ticker-down">▼ −0.73%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">VIX</span> 14.22 <span class="ticker-down">▼ −3.10%</span></span>
+        <!-- Duplicado para scroll continuo sin salto -->
+        <span class="ticker-item"><span class="ticker-symbol">BTC/USD</span> 67,420.50 <span class="ticker-up">▲ +2.34%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">ETH/USD</span> 3,512.80 <span class="ticker-up">▲ +1.87%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">SPX</span> 5,241.30 <span class="ticker-down">▼ −0.42%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">NQ</span> 18,380.00 <span class="ticker-up">▲ +0.61%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">EURUSD</span> 1.0872 <span class="ticker-down">▼ −0.18%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">GOLD</span> 2,318.40 <span class="ticker-up">▲ +0.95%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">WTI</span> 78.34 <span class="ticker-down">▼ −0.73%</span></span>
+        <span class="ticker-item"><span class="ticker-symbol">VIX</span> 14.22 <span class="ticker-down">▼ −3.10%</span></span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================================================
+       MAIN: Contenido principal de la página.
+       id="contenido-principal" es el destino del skip-link.
+       role="main" refuerza para agentes de usuario legacy.
+       ================================================ -->
+  <main id="contenido-principal" role="main">
+
+    <!-- ============================================
+         SECTION: Hero / Portada
+         ============================================ -->
+    <section class="hero" aria-labelledby="hero-heading">
+      <div>
+        <p class="hero-eyebrow" aria-hidden="true">// Sistema de trading v2.4.1 activo</p>
+        <h1 class="hero-title" id="hero-heading">
+          Mercados dominados<br>
+          con <span class="highlight">precisión</span><br>
+          <span class="gold">algorítmica</span>
+        </h1>
+        <p class="hero-subtitle">
+          Aprende a construir, probar y desplegar estrategias cuantitativas
+          que operan con lógica, velocidad y disciplina inquebrantable.
+        </p>
+        <div class="hero-actions">
+          <a href="#estrategias" class="btn-primary" aria-label="Explorar estrategias de trading algorítmico">
+            Explorar Estrategias
+          </a>
+          <a href="#que-es" class="btn-secondary" aria-label="Aprender qué es el trading algorítmico">
+            ¿Cómo funciona?
+          </a>
+        </div>
+        <div class="hero-stats" role="list" aria-label="Estadísticas clave">
+          <div class="stat-item" role="listitem">
+            <div class="stat-value">12+</div>
+            <div class="stat-label">Estrategias documentadas</div>
+          </div>
+          <div class="stat-item" role="listitem">
+            <div class="stat-value">98.7%</div>
+            <div class="stat-label">Uptime de backtest engine</div>
+          </div>
+          <div class="stat-item" role="listitem">
+            <div class="stat-value">&lt;5ms</div>
+            <div class="stat-label">Latencia media de ejecución</div>
+          </div>
+          <div class="stat-item" role="listitem">
+            <div class="stat-value">17 años</div>
+            <div class="stat-label">Datos históricos disponibles</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION: ¿Qué es el Trading Algorítmico?
+         ============================================ -->
+    <section id="que-es" aria-labelledby="que-es-heading">
+      <div class="container">
+        <div class="intro-grid">
+          <div class="intro-text">
+            <p class="section-label">// Fundamentos</p>
+            <h2 class="section-title" id="que-es-heading">
+              ¿Qué es el<br>Trading Algorítmico?
+            </h2>
+            <p>
+              El <strong>trading algorítmico</strong> es el proceso de ejecutar órdenes
+              en los mercados financieros mediante instrucciones programadas —algoritmos—
+              que analizan datos, detectan oportunidades y actúan en milisegundos,
+              eliminando el sesgo emocional de la ecuación.
+            </p>
+            <p>
+              A diferencia del trading discrecional, un algoritmo opera con reglas
+              <strong>explícitas, repetibles y auditables</strong>: si el precio de
+              cierre cruza la media móvil de 50 periodos con volumen superior a la
+              media, compra 100 acciones. Punto.
+            </p>
+            <p>
+              Desde fondos de cobertura de Wall Street hasta traders independientes
+              con una Raspberry Pi, el abanico de actores es hoy más amplio que
+              nunca. Lo que antes requería decenas de ingenieros ahora es accesible
+              con Python, una API de broker y los conceptos correctos.
+            </p>
+          </div>
+
+          <!-- Imagen representativa con alt descriptivo (WCAG 1.1.1) -->
+          <div class="intro-visual">
+            <img
+              src="assets/chart-placeholder.svg"
+              alt="Gráfico de velas japonesas con indicadores técnicos superpuestos: media móvil exponencial de 20 periodos (azul), bandas de Bollinger (gris) y señales de entrada marcadas con flechas verdes"
+              width="600"
+              height="380"
+              loading="lazy"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         SECTION: Estrategias de Trading
+         Cada estrategia es un <article> independiente
+         porque puede ser leída/sindicada de forma aislada.
+         ============================================ -->
+    <section id="estrategias" aria-labelledby="estrategias-heading">
+      <div class="container">
+        <header class="strategies-header">
+          <p class="section-label">// Estrategias cuantitativas</p>
+          <h2 class="section-title" id="estrategias-heading">
+            Arquitecturas de estrategia probadas
+          </h2>
+          <p style="color:var(--color-text-muted); max-width:560px; margin:0 auto;">
+            Cada metodología tiene su nicho. La clave está en entender
+            cuándo y por qué funciona cada una.
+          </p>
+        </header>
+
+        <div class="strategies-grid">
+
+          <!--
+            ARTICLE: Mean Reversion
+            Unidad de contenido autónoma con su propio encabezado.
+          -->
+          <article class="strategy-card" style="--card-accent: var(--color-jade);"
+            aria-labelledby="strat-mean-heading">
+            <span class="card-badge">Reversión a la media</span>
+            <h3 id="strat-mean-heading">Mean Reversion</h3>
+            <p>
+              Parte de la premisa estadística de que los precios oscilan alrededor
+              de un valor de equilibrio. Cuando un activo se desvía significativamente
+              —medido por z-score o distancia a la media móvil— se asume que regresará.
+            </p>
+            <p>
+              Ideal en mercados <em>ranging</em> (laterales). Implementaciones comunes:
+              pares trading, estrategias de bandas de Bollinger con RSI de confirmación.
+            </p>
+            <div class="card-metrics" aria-label="Métricas típicas de la estrategia Mean Reversion">
+              <div class="metric">
+                <div class="metric-val">62–68%</div>
+                <div class="metric-name">Win Rate típico</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val gold">0.8–1.4</div>
+                <div class="metric-name">Sharpe Ratio</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val">Bajo</div>
+                <div class="metric-name">Drawdown medio</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ARTICLE: Momentum / Trend Following -->
+          <article class="strategy-card" style="--card-accent: var(--color-gold);"
+            aria-labelledby="strat-trend-heading">
+            <span class="card-badge gold">Seguimiento de tendencia</span>
+            <h3 id="strat-trend-heading">Trend Following</h3>
+            <p>
+              «The trend is your friend» llevado al extremo cuantitativo. El algoritmo
+              detecta rupturas de estructura de mercado y monta la tendencia hasta
+              que señales de debilitamiento aparecen: ADX cayendo, precio bajo VWAP,
+              divergencia en momentum.
+            </p>
+            <p>
+              Funciona excepcionalmente bien en mercados de futuros y cryptos con
+              tendencias prolongadas. Win rate bajo pero Risk/Reward elevado.
+            </p>
+            <div class="card-metrics" aria-label="Métricas típicas de la estrategia Trend Following">
+              <div class="metric">
+                <div class="metric-val">38–45%</div>
+                <div class="metric-name">Win Rate típico</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val gold">1.5–2.8</div>
+                <div class="metric-name">Sharpe Ratio</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val">Medio</div>
+                <div class="metric-name">Drawdown medio</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ARTICLE: Market Making -->
+          <article class="strategy-card" style="--card-accent: var(--color-crimson);"
+            aria-labelledby="strat-mm-heading">
+            <span class="card-badge crimson">Alta frecuencia</span>
+            <h3 id="strat-mm-heading">Market Making</h3>
+            <p>
+              El algoritmo cotiza simultáneamente en bid y ask, capturando el
+              <em>spread</em> como ganancia. Requiere infraestructura de baja
+              latencia (&lt;1ms), colocation en el exchange y gestión de inventario
+              sofisticada para evitar exposición direccional.
+            </p>
+            <p>
+              Terreno de instituciones y fondos HFT, aunque plataformas DeFi
+              abren la puerta a estrategias de LP algorítmico más accesibles.
+            </p>
+            <div class="card-metrics" aria-label="Métricas típicas de la estrategia Market Making">
+              <div class="metric">
+                <div class="metric-val">70–85%</div>
+                <div class="metric-name">Win Rate típico</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val gold">2.0–4.0</div>
+                <div class="metric-name">Sharpe Ratio</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val">Muy bajo</div>
+                <div class="metric-name">Drawdown medio</div>
+              </div>
+            </div>
+          </article>
+
+          <!-- ARTICLE: Statistical Arbitrage -->
+          <article class="strategy-card" style="--card-accent: var(--color-jade);"
+            aria-labelledby="strat-stat-heading">
+            <span class="card-badge">Arbitraje estadístico</span>
+            <h3 id="strat-stat-heading">Statistical Arbitrage</h3>
+            <p>
+              Explotación de relaciones de cointegración entre activos. Si dos
+              acciones del mismo sector históricamente se mueven juntas y divergen,
+              el algoritmo va largo en el rezagado y corto en el adelantado,
+              apostando a la convergencia.
+            </p>
+            <p>
+              Requiere conocimiento sólido de series temporales: pruebas ADF,
+              cointegración de Engle-Granger, modelos VECM y gestión dinámica de hedge ratio.
+            </p>
+            <div class="card-metrics" aria-label="Métricas típicas de la estrategia Statistical Arbitrage">
+              <div class="metric">
+                <div class="metric-val">55–70%</div>
+                <div class="metric-name">Win Rate típico</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val gold">1.2–2.2</div>
+                <div class="metric-name">Sharpe Ratio</div>
+              </div>
+              <div class="metric">
+                <div class="metric-val">Bajo</div>
+                <div class="metric-name">Drawdown medio</div>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================
+         LAYOUT CON ASIDE
+         <aside> contiene info complementaria (datos
+         de mercado) que no es esencial para el flujo
+         principal pero añade valor contextual.
+         ============================================ -->
+    <div class="main-aside-layout">
+
+      <!-- Conceptos clave (dentro de main) -->
+      <section id="conceptos" aria-labelledby="conceptos-heading">
+        <p class="section-label">// Vocabulario cuantitativo</p>
+        <h2 class="section-title" id="conceptos-heading">
+          Conceptos que todo algo-trader debe dominar
+        </h2>
+
+        <ul class="concepts-list" aria-label="Lista de conceptos fundamentales de trading algorítmico">
+          <li>
+            <span class="concept-icon" aria-hidden="true"> </span>
+            <div class="concept-body">
+              <h3>Backtesting</h3>
+              <p>
+                Simulación de una estrategia sobre datos históricos para evaluar su
+                desempeño pasado. El objetivo no es predecir el futuro, sino entender
+                el comportamiento estadístico de las reglas bajo diferentes regímenes
+                de mercado. Herramientas: Backtrader, VectorBT, Zipline.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span class="concept-icon" aria-hidden="true"> </span>
+            <div class="concept-body">
+              <h3>Ratio de Sharpe</h3>
+              <p>
+                Mide el retorno ajustado al riesgo: (Retorno − Tasa libre de riesgo) / Desviación
+                estándar de retornos. Un Sharpe &gt; 1 se considera aceptable; &gt; 2 es excelente.
+                Permite comparar estrategias con distinto perfil de riesgo en igualdad de condiciones.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span class="concept-icon" aria-hidden="true"> </span>
+            <div class="concept-body">
+              <h3>Maximum Drawdown (MDD)</h3>
+              <p>
+                Caída máxima desde un pico de equity hasta el valle siguiente antes de
+                recuperación. Es el indicador de dolor psicológico: una estrategia con
+                MDD del 40% requiere una recuperación del 67% solo para volver al punto
+                de partida. Gestionar el drawdown es gestionar la supervivencia.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span class="concept-icon" aria-hidden="true"> </span>
+            <div class="concept-body">
+              <h3>Overfitting (Sobreajuste)</h3>
+              <p>
+                El gran enemigo del quant. Ocurre cuando el algoritmo aprende los
+                "accidentes" del pasado en lugar de los patrones genuinos, produciendo
+                resultados brillantes en backtest pero catastróficos en live trading.
+                Solución: walk-forward optimization, out-of-sample testing, regularización.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span class="concept-icon" aria-hidden="true"> </span>
+            <div class="concept-body">
+              <h3>Slippage y Costos de Transacción</h3>
+              <p>
+                La diferencia entre el precio esperado y el precio real de ejecución.
+                Una estrategia que genera 0.3% diario antes de costos puede volverse
+                unprofitable si el slippage más comisiones suman 0.25%. Modelar costos
+                reales en el backtest es imprescindible para tener una estimación honesta.
+              </p>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <!-- ============================================
+           ASIDE: Datos de mercado complementarios.
+           aria-label identifica su propósito para AT.
+           ============================================ -->
+      <aside aria-label="Panel de datos de mercado" role="complementary">
+        <div class="aside-panel">
+          <h2 class="aside-title">Mercados — Snapshot</h2>
+
+          <!-- Los datos son estáticos/ilustrativos -->
+          <div role="list" aria-label="Precios de instrumentos financieros">
+            <div class="market-row" role="listitem">
+              <span class="market-name">BTC/USD</span>
+              <span class="market-price">$67,420</span>
+              <span class="market-change up" aria-label="Subida del 2.34%">▲ 2.34%</span>
+            </div>
+            <div class="market-row" role="listitem">
+              <span class="market-name">ETH/USD</span>
+              <span class="market-price">$3,512</span>
+              <span class="market-change up" aria-label="Subida del 1.87%">▲ 1.87%</span>
+            </div>
+            <div class="market-row" role="listitem">
+              <span class="market-name">S&amp;P 500</span>
+              <span class="market-price">5,241</span>
+              <span class="market-change down" aria-label="Bajada del 0.42%">▼ 0.42%</span>
+            </div>
+            <div class="market-row" role="listitem">
+              <span class="market-name">Nasdaq-100</span>
+              <span class="market-price">18,380</span>
+              <span class="market-change up" aria-label="Subida del 0.61%">▲ 0.61%</span>
+            </div>
+            <div class="market-row" role="listitem">
+              <span class="market-name">EUR/USD</span>
+              <span class="market-price">1.0872</span>
+              <span class="market-change down" aria-label="Bajada del 0.18%">▼ 0.18%</span>
+            </div>
+            <div class="market-row" role="listitem">
+              <span class="market-name">Oro (XAU)</span>
+              <span class="market-price">$2,318</span>
+              <span class="market-change up" aria-label="Subida del 0.95%">▲ 0.95%</span>
+            </div>
+            <div class="market-row" role="listitem">
+              <span class="market-name">WTI Crude</span>
+              <span class="market-price">$78.34</span>
+              <span class="market-change down" aria-label="Bajada del 0.73%">▼ 0.73%</span>
+            </div>
+            <div class="market-row" role="listitem">
+              <span class="market-name">VIX</span>
+              <span class="market-price">14.22</span>
+              <span class="market-change down" aria-label="Bajada del 3.10%">▼ 3.10%</span>
+            </div>
+          </div>
+
+          <p style="font-family:var(--font-mono); font-size:0.62rem; color:var(--color-text-dim); margin-top:1rem; text-align:center; letter-spacing:0.08em;">
+            DATOS ILUSTRATIVOS · NO ASESORAMIENTO FINANCIERO
+          </p>
+        </div>
+
+        <!-- Segunda tarjeta en el aside: recursos recomendados -->
+        <div class="aside-panel" style="margin-top:1rem;">
+          <h2 class="aside-title">Recursos esenciales</h2>
+          <nav aria-label="Recursos de aprendizaje externos">
+            <ul style="list-style:none; display:flex; flex-direction:column; gap:0.6rem;">
+              <li>
+                <a href="https://www.quantopian.com" rel="noopener noreferrer" target="_blank"
+                  style="color:var(--color-jade); font-family:var(--font-mono); font-size:0.78rem; text-decoration:none;"
+                  aria-label="QuantConnect — plataforma de backtesting en la nube (se abre en nueva pestaña)">
+                  ↗ QuantConnect
+                </a>
+                <p style="font-size:0.72rem; color:var(--color-text-dim); margin-top:0.15rem;">Backtesting en la nube, Python</p>
+              </li>
+              <li>
+                <a href="https://www.backtrader.com" rel="noopener noreferrer" target="_blank"
+                  style="color:var(--color-jade); font-family:var(--font-mono); font-size:0.78rem; text-decoration:none;"
+                  aria-label="Backtrader — framework de backtesting en Python (se abre en nueva pestaña)">
+                  ↗ Backtrader
+                </a>
+                <p style="font-size:0.72rem; color:var(--color-text-dim); margin-top:0.15rem;">Framework open-source Python</p>
+              </li>
+              <li>
+                <a href="https://vectorbt.pro" rel="noopener noreferrer" target="_blank"
+                  style="color:var(--color-jade); font-family:var(--font-mono); font-size:0.78rem; text-decoration:none;"
+                  aria-label="VectorBT — backtesting vectorizado ultrarrápido (se abre en nueva pestaña)">
+                  ↗ VectorBT Pro
+                </a>
+                <p style="font-size:0.72rem; color:var(--color-text-dim); margin-top:0.15rem;">Backtesting vectorizado ultrarrápido</p>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+    </div><!-- fin .main-aside-layout -->
+
+    <!-- ============================================
+         SECTION: Formulario de Contacto / Interés
+         Accesibilidad: label + for/id + aria-describedby
+         + aria-required + fieldset/legend para grupos.
+         ============================================ -->
+    <section id="contacto" aria-labelledby="contacto-heading">
+      <p class="section-label">// Únete a la comunidad</p>
+      <h2 class="section-title" id="contacto-heading">
+        Accede al contenido completo
+      </h2>
+      <p class="form-desc" id="form-desc">
+        Comparte tu perfil y te enviaremos los recursos más relevantes
+        para tu nivel y objetivos. Sin spam, sin ventas agresivas.
+      </p>
+
+      <!--
+        aria-describedby vincula el formulario con su descripción
+        para que los lectores de pantalla la anuncien.
+      -->
+      <form
+        id="form-contacto"
+        aria-describedby="form-desc"
+        novalidate
+      >
+        <!--
+          FIELDSET + LEGEND: agrupa campos relacionados
+          y los identifica semánticamente. WCAG 1.3.1.
+        -->
+        <fieldset>
+          <legend style="
+            font-family:var(--font-display);
+            font-size:0.75rem;
+            font-weight:700;
+            letter-spacing:0.15em;
+            text-transform:uppercase;
+            color:var(--color-gold);
+            margin-bottom:1rem;
+          ">Información personal</legend>
+
+          <div class="form-row">
+            <div class="field-group">
+              <!-- label for="nombre" asocia explícitamente al input -->
+              <label for="nombre">
+                Nombre <em class="required-mark" aria-label="Campo obligatorio">*</em>
+              </label>
+              <input
+                type="text"
+                id="nombre"
+                name="nombre"
+                autocomplete="given-name"
+                placeholder="Tu nombre"
+                required
+                aria-required="true"
+              />
+            </div>
+            <div class="field-group">
+              <label for="apellido">Apellido</label>
+              <input
+                type="text"
+                id="apellido"
+                name="apellido"
+                autocomplete="family-name"
+                placeholder="Tu apellido"
+              />
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="email">
+              Correo electrónico <em class="required-mark" aria-label="Campo obligatorio">*</em>
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              autocomplete="email"
+              placeholder="tu@email.com"
+              required
+              aria-required="true"
+            />
+          </div>
+        </fieldset>
+
+        <fieldset style="margin-top:var(--space-sm);">
+          <legend style="
+            font-family:var(--font-display);
+            font-size:0.75rem;
+            font-weight:700;
+            letter-spacing:0.15em;
+            text-transform:uppercase;
+            color:var(--color-gold);
+            margin-bottom:1rem;
+          ">Perfil de trading</legend>
+
+          <div class="form-row">
+            <div class="field-group">
+              <!-- select con label asociado: WCAG 1.3.1 -->
+              <label for="nivel">Nivel de experiencia</label>
+              <select id="nivel" name="nivel" aria-required="true" required>
+                <option value="" disabled selected>Selecciona tu nivel</option>
+                <option value="principiante">Principiante — nuevo en trading</option>
+                <option value="intermedio">Intermedio — opero manualmente</option>
+                <option value="avanzado">Avanzado — tengo algo de código</option>
+                <option value="profesional">Profesional — gestiono capital</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label for="mercado">Mercado de interés</label>
+              <select id="mercado" name="mercado">
+                <option value="" disabled selected>Selecciona mercado</option>
+                <option value="acciones">Acciones / Equities</option>
+                <option value="futuros">Futuros y derivados</option>
+                <option value="forex">Forex</option>
+                <option value="crypto">Criptomonedas</option>
+                <option value="multi">Multi-asset</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="mensaje">¿Qué quieres construir?</label>
+            <textarea
+              id="mensaje"
+              name="mensaje"
+              placeholder="Cuéntame tu idea de estrategia, el problema que quieres resolver, o cualquier pregunta..."
+              aria-describedby="mensaje-hint"
+            ></textarea>
+            <span id="mensaje-hint" style="font-family:var(--font-mono); font-size:0.65rem; color:var(--color-text-dim); letter-spacing:0.05em;">
+              Opcional · Máx. 500 caracteres
+            </span>
+          </div>
+        </fieldset>
+
+        <div class="form-submit">
+          <!--
+            aria-label clarifica el propósito del botón
+            para lectores de pantalla. WCAG 2.4.6.
+          -->
+          <button
+            type="submit"
+            class="btn-primary"
+            aria-label="Enviar formulario de acceso a AlgoTrading Nexus"
+          >
+            Enviar solicitud de acceso →
+          </button>
+        </div>
+      </form>
+    </section>
+
+  </main>
+
+  <!-- ================================================
+       FOOTER: Metainformación, enlaces secundarios,
+       créditos y aviso legal.
+       role="contentinfo" identifica el pie del sitio.
+       ================================================ -->
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <div>
+        <p class="footer-brand-name">Algo<span>Trading</span> Nexus</p>
+        <p class="footer-desc">
+          Plataforma educativa sobre diseño, implementación y operación de
+          estrategias cuantitativas en mercados financieros globales.
+          Hecha para quienes prefieren datos a corazonadas.
+        </p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Navegar</h4>
+        <ul>
+          <li><a href="#que-es">¿Qué es?</a></li>
+          <li><a href="#estrategias">Estrategias</a></li>
+          <li><a href="#conceptos">Conceptos</a></li>
+          <li><a href="#contacto">Contacto</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#" aria-label="Ver política de privacidad">Privacidad</a></li>
+          <li><a href="#" aria-label="Ver aviso legal">Aviso legal</a></li>
+          <li>
+            <a href="#" aria-label="Ver declaración de accesibilidad">
+              Accesibilidad
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>
+        &copy; 2025 AlgoTrading Nexus · Actividad 2 — HTML5 Semántico y Accesible ·
+        <a href="https://validator.w3.org" rel="noopener noreferrer" target="_blank"
+          aria-label="Validar código HTML5 con W3C (se abre en nueva pestaña)">
+          Validado W3C
+        </a>
+      </p>
+      <p>
+        ⚠ Contenido educativo · No constituye asesoramiento financiero
+      </p>
+    </div>
+  </footer>
+
+</body>
+</html>
