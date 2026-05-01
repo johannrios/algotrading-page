@@ -1,42 +1,17 @@
 <!DOCTYPE html>
 <html lang="es">
-
-<!--
-  ============================================================
-  ALGOTRADING NEXUS — index.html
-  ============================================================
-
-  DECISIONES SEMÁNTICAS:
-  - <header>: Contiene identidad de marca y navegación principal.
-  - <nav> + aria-label: Distingue la navegación principal del sitio.
-  - <main>: Delimita el contenido central, ignorado por lectores
-    de pantalla al saltar con tecla de acceso directo.
-  - <section>: Agrupa bloques temáticos con encabezado propio.
-  - <article>: Cada estrategia de trading es contenido
-    autónomo y reutilizable (sindicable).
-  - <aside>: Datos de mercado en tiempo real, complementarios
-    pero no esenciales para el flujo principal.
-  - <footer>: Metainformación y enlaces secundarios.
-
-  DECISIONES DE ACCESIBILIDAD:
-  - role="banner", role="navigation", role="main" refuerzan
-    la semántica para agentes de usuario más antiguos.
-  - aria-label en <nav> diferencia múltiples zonas de
-    navegación en la misma página.
-  - aria-describedby conecta el formulario con su descripción.
-  - aria-live="polite" en el ticker permite actualizar el
-    contenido sin interrumpir el flujo del lector de pantalla.
-  - Todos los <img> tienen alt descriptivo y contextual.
-  - Los <label> están explícitamente asociados vía `for`/`id`.
-  - Contraste WCAG AA verificado: fondo #0a0f1e sobre texto
-    #e8e2d5 da ratio >7:1 (AAA).
-  - tabindex gestionado para flujo lógico de teclado.
-  - Enfoque visible con :focus-visible mejorado.
-  - Skip-link para saltar al contenido principal.
-  ============================================================
--->
-
 <head>
+  <!--
+    ALGOTRADING NEXUS — index.html | HTML5 Semántico y Accesible
+    NOTA TÉCNICA: <meta charset> debe aparecer dentro de los primeros 1024 bytes
+    del archivo (especificación HTML5 §12.2.2.2). Por eso el comentario documental
+    va DENTRO del <head>, después del charset, y no antes del <html>.
+
+    SEMÁNTICA: header/nav/main/section/article/aside/footer con roles ARIA
+    omitidos donde HTML5 los implica nativamente (WCAG técnica ARIA11).
+    ACCESIBILIDAD: skip-link, aria-label, aria-live, aria-describedby,
+    contraste AAA, foco visible mejorado (:focus-visible).
+  -->
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description"
@@ -664,6 +639,7 @@
       margin-bottom: var(--space-sm);
     }
 
+    /* dl semántico para métricas: dt = término, dd = valor */
     .card-metrics {
       display: flex;
       gap: 1rem;
@@ -672,27 +648,29 @@
       border-top: 1px solid var(--color-border);
     }
 
-    .metric {
+    .card-metrics .metric {
       flex: 1;
     }
 
-    .metric-val {
-      font-family: var(--font-mono);
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--color-jade);
-    }
-
-    .metric-val.gold { color: var(--color-gold); }
-
-    .metric-name {
+    .card-metrics dt.metric-name {
       font-family: var(--font-mono);
       font-size: 0.6rem;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: var(--color-text-dim);
       margin-top: 0.15rem;
+      font-weight: normal;
     }
+
+    .card-metrics dd.metric-val {
+      font-family: var(--font-mono);
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--color-jade);
+      margin: 0;
+    }
+
+    .card-metrics dd.metric-val.gold { color: var(--color-gold); }
 
     /* =============================================
        ASIDE — DATOS DE MERCADO EN TIEMPO REAL
@@ -945,7 +923,7 @@
       max-width: 280px;
     }
 
-    .footer-col h4 {
+    .footer-col-heading {
       font-family: var(--font-display);
       font-size: 0.72rem;
       font-weight: 700;
@@ -1234,7 +1212,7 @@
        role="banner" identifica el encabezado del sitio
        para tecnologías asistivas.
        ================================================ -->
-  <header role="banner">
+  <header>
     <div class="header-inner">
 
       <!-- Logo: enlace a inicio con texto descriptivo -->
@@ -1260,7 +1238,7 @@
         esta navegación de otras posibles en la página.
         WCAG 2.4.6: encabezados y etiquetas descriptivos.
       -->
-      <nav aria-label="Navegación principal" role="navigation">
+      <nav aria-label="Navegación principal">
         <ul>
           <li><a href="#que-es">¿Qué es?</a></li>
           <li><a href="#estrategias">Estrategias</a></li>
@@ -1310,7 +1288,7 @@
        id="contenido-principal" es el destino del skip-link.
        role="main" refuerza para agentes de usuario legacy.
        ================================================ -->
-  <main id="contenido-principal" role="main">
+  <main id="contenido-principal">
 
     <!-- ============================================
          SECTION: Hero / Portada
@@ -1438,20 +1416,20 @@
               Ideal en mercados <em>ranging</em> (laterales). Implementaciones comunes:
               pares trading, estrategias de bandas de Bollinger con RSI de confirmación.
             </p>
-            <div class="card-metrics" aria-label="Métricas típicas de la estrategia Mean Reversion">
+            <dl class="card-metrics" aria-label="Métricas típicas de la estrategia Mean Reversion">
               <div class="metric">
-                <div class="metric-val">62–68%</div>
-                <div class="metric-name">Win Rate típico</div>
+                <dt class="metric-name">Win Rate típico</dt>
+                <dd class="metric-val">62–68%</dd>
               </div>
               <div class="metric">
-                <div class="metric-val gold">0.8–1.4</div>
-                <div class="metric-name">Sharpe Ratio</div>
+                <dt class="metric-name">Sharpe Ratio</dt>
+                <dd class="metric-val gold">0.8–1.4</dd>
               </div>
               <div class="metric">
-                <div class="metric-val">Bajo</div>
-                <div class="metric-name">Drawdown medio</div>
+                <dt class="metric-name">Drawdown medio</dt>
+                <dd class="metric-val">Bajo</dd>
               </div>
-            </div>
+            </dl>
           </article>
 
           <!-- ARTICLE: Momentum / Trend Following -->
@@ -1469,20 +1447,20 @@
               Funciona excepcionalmente bien en mercados de futuros y cryptos con
               tendencias prolongadas. Win rate bajo pero Risk/Reward elevado.
             </p>
-            <div class="card-metrics" aria-label="Métricas típicas de la estrategia Trend Following">
+            <dl class="card-metrics" aria-label="Métricas típicas de la estrategia Trend Following">
               <div class="metric">
-                <div class="metric-val">38–45%</div>
-                <div class="metric-name">Win Rate típico</div>
+                <dt class="metric-name">Win Rate típico</dt>
+                <dd class="metric-val">38–45%</dd>
               </div>
               <div class="metric">
-                <div class="metric-val gold">1.5–2.8</div>
-                <div class="metric-name">Sharpe Ratio</div>
+                <dt class="metric-name">Sharpe Ratio</dt>
+                <dd class="metric-val gold">1.5–2.8</dd>
               </div>
               <div class="metric">
-                <div class="metric-val">Medio</div>
-                <div class="metric-name">Drawdown medio</div>
+                <dt class="metric-name">Drawdown medio</dt>
+                <dd class="metric-val">Medio</dd>
               </div>
-            </div>
+            </dl>
           </article>
 
           <!-- ARTICLE: Market Making -->
@@ -1500,20 +1478,20 @@
               Terreno de instituciones y fondos HFT, aunque plataformas DeFi
               abren la puerta a estrategias de LP algorítmico más accesibles.
             </p>
-            <div class="card-metrics" aria-label="Métricas típicas de la estrategia Market Making">
+            <dl class="card-metrics" aria-label="Métricas típicas de la estrategia Market Making">
               <div class="metric">
-                <div class="metric-val">70–85%</div>
-                <div class="metric-name">Win Rate típico</div>
+                <dt class="metric-name">Win Rate típico</dt>
+                <dd class="metric-val">70–85%</dd>
               </div>
               <div class="metric">
-                <div class="metric-val gold">2.0–4.0</div>
-                <div class="metric-name">Sharpe Ratio</div>
+                <dt class="metric-name">Sharpe Ratio</dt>
+                <dd class="metric-val gold">2.0–4.0</dd>
               </div>
               <div class="metric">
-                <div class="metric-val">Muy bajo</div>
-                <div class="metric-name">Drawdown medio</div>
+                <dt class="metric-name">Drawdown medio</dt>
+                <dd class="metric-val">Muy bajo</dd>
               </div>
-            </div>
+            </dl>
           </article>
 
           <!-- ARTICLE: Statistical Arbitrage -->
@@ -1531,20 +1509,20 @@
               Requiere conocimiento sólido de series temporales: pruebas ADF,
               cointegración de Engle-Granger, modelos VECM y gestión dinámica de hedge ratio.
             </p>
-            <div class="card-metrics" aria-label="Métricas típicas de la estrategia Statistical Arbitrage">
+            <dl class="card-metrics" aria-label="Métricas típicas de la estrategia Statistical Arbitrage">
               <div class="metric">
-                <div class="metric-val">55–70%</div>
-                <div class="metric-name">Win Rate típico</div>
+                <dt class="metric-name">Win Rate típico</dt>
+                <dd class="metric-val">55–70%</dd>
               </div>
               <div class="metric">
-                <div class="metric-val gold">1.2–2.2</div>
-                <div class="metric-name">Sharpe Ratio</div>
+                <dt class="metric-name">Sharpe Ratio</dt>
+                <dd class="metric-val gold">1.2–2.2</dd>
               </div>
               <div class="metric">
-                <div class="metric-val">Bajo</div>
-                <div class="metric-name">Drawdown medio</div>
+                <dt class="metric-name">Drawdown medio</dt>
+                <dd class="metric-val">Bajo</dd>
               </div>
-            </div>
+            </dl>
           </article>
 
         </div>
@@ -1568,7 +1546,7 @@
 
         <ul class="concepts-list" aria-label="Lista de conceptos fundamentales de trading algorítmico">
           <li>
-            <span class="concept-icon" aria-hidden="true"> </span>
+            <span class="concept-icon" aria-hidden="true">📊</span>
             <div class="concept-body">
               <h3>Backtesting</h3>
               <p>
@@ -1633,7 +1611,7 @@
            ASIDE: Datos de mercado complementarios.
            aria-label identifica su propósito para AT.
            ============================================ -->
-      <aside aria-label="Panel de datos de mercado" role="complementary">
+      <aside aria-label="Panel de datos de mercado">
         <div class="aside-panel">
           <h2 class="aside-title">Mercados — Snapshot</h2>
 
@@ -1642,42 +1620,42 @@
             <div class="market-row" role="listitem">
               <span class="market-name">BTC/USD</span>
               <span class="market-price">$67,420</span>
-              <span class="market-change up" aria-label="Subida del 2.34%">▲ 2.34%</span>
+              <span class="market-change up" role="img" aria-label="Subida del 2.34%">▲ 2.34%</span>
             </div>
             <div class="market-row" role="listitem">
               <span class="market-name">ETH/USD</span>
               <span class="market-price">$3,512</span>
-              <span class="market-change up" aria-label="Subida del 1.87%">▲ 1.87%</span>
+              <span class="market-change up" role="img" aria-label="Subida del 1.87%">▲ 1.87%</span>
             </div>
             <div class="market-row" role="listitem">
               <span class="market-name">S&amp;P 500</span>
               <span class="market-price">5,241</span>
-              <span class="market-change down" aria-label="Bajada del 0.42%">▼ 0.42%</span>
+              <span class="market-change down" role="img" aria-label="Bajada del 0.42%">▼ 0.42%</span>
             </div>
             <div class="market-row" role="listitem">
               <span class="market-name">Nasdaq-100</span>
               <span class="market-price">18,380</span>
-              <span class="market-change up" aria-label="Subida del 0.61%">▲ 0.61%</span>
+              <span class="market-change up" role="img" aria-label="Subida del 0.61%">▲ 0.61%</span>
             </div>
             <div class="market-row" role="listitem">
               <span class="market-name">EUR/USD</span>
               <span class="market-price">1.0872</span>
-              <span class="market-change down" aria-label="Bajada del 0.18%">▼ 0.18%</span>
+              <span class="market-change down" role="img" aria-label="Bajada del 0.18%">▼ 0.18%</span>
             </div>
             <div class="market-row" role="listitem">
               <span class="market-name">Oro (XAU)</span>
               <span class="market-price">$2,318</span>
-              <span class="market-change up" aria-label="Subida del 0.95%">▲ 0.95%</span>
+              <span class="market-change up" role="img" aria-label="Subida del 0.95%">▲ 0.95%</span>
             </div>
             <div class="market-row" role="listitem">
               <span class="market-name">WTI Crude</span>
               <span class="market-price">$78.34</span>
-              <span class="market-change down" aria-label="Bajada del 0.73%">▼ 0.73%</span>
+              <span class="market-change down" role="img" aria-label="Bajada del 0.73%">▼ 0.73%</span>
             </div>
             <div class="market-row" role="listitem">
               <span class="market-name">VIX</span>
               <span class="market-price">14.22</span>
-              <span class="market-change down" aria-label="Bajada del 3.10%">▼ 3.10%</span>
+              <span class="market-change down" role="img" aria-label="Bajada del 3.10%">▼ 3.10%</span>
             </div>
           </div>
 
@@ -1765,7 +1743,7 @@
             <div class="field-group">
               <!-- label for="nombre" asocia explícitamente al input -->
               <label for="nombre">
-                Nombre <em class="required-mark" aria-label="Campo obligatorio">*</em>
+                Nombre <span class="required-mark" role="img" aria-label="Campo obligatorio">*</span>
               </label>
               <input
                 type="text"
@@ -1774,7 +1752,6 @@
                 autocomplete="given-name"
                 placeholder="Tu nombre"
                 required
-                aria-required="true"
               />
             </div>
             <div class="field-group">
@@ -1791,7 +1768,7 @@
 
           <div class="field-group">
             <label for="email">
-              Correo electrónico <em class="required-mark" aria-label="Campo obligatorio">*</em>
+              Correo electrónico <span class="required-mark" role="img" aria-label="Campo obligatorio">*</span>
             </label>
             <input
               type="email"
@@ -1800,7 +1777,6 @@
               autocomplete="email"
               placeholder="tu@email.com"
               required
-              aria-required="true"
             />
           </div>
         </fieldset>
@@ -1820,7 +1796,7 @@
             <div class="field-group">
               <!-- select con label asociado: WCAG 1.3.1 -->
               <label for="nivel">Nivel de experiencia</label>
-              <select id="nivel" name="nivel" aria-required="true" required>
+              <select id="nivel" name="nivel" required>
                 <option value="" disabled selected>Selecciona tu nivel</option>
                 <option value="principiante">Principiante — nuevo en trading</option>
                 <option value="intermedio">Intermedio — opero manualmente</option>
@@ -1879,7 +1855,7 @@
        créditos y aviso legal.
        role="contentinfo" identifica el pie del sitio.
        ================================================ -->
-  <footer role="contentinfo">
+  <footer>
     <div class="footer-inner">
       <div>
         <p class="footer-brand-name">Algo<span>Trading</span> Nexus</p>
@@ -1891,7 +1867,7 @@
       </div>
 
       <div class="footer-col">
-        <h4>Navegar</h4>
+        <h3 class="footer-col-heading">Navegar</h3>
         <ul>
           <li><a href="#que-es">¿Qué es?</a></li>
           <li><a href="#estrategias">Estrategias</a></li>
@@ -1901,7 +1877,7 @@
       </div>
 
       <div class="footer-col">
-        <h4>Legal</h4>
+        <h3 class="footer-col-heading">Legal</h3>
         <ul>
           <li><a href="#" aria-label="Ver política de privacidad">Privacidad</a></li>
           <li><a href="#" aria-label="Ver aviso legal">Aviso legal</a></li>
