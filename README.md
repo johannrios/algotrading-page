@@ -27,10 +27,30 @@ algotrading-page/
 
 ## Cómo visualizar la página
 
-### Directamente en el navegador
-1. Descarga o clona este repositorio.
-2. Abre el archivo `index.html` con cualquier navegador moderno (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+).
-3. No se requiere servidor web ni dependencias de instalación.
+### Opción A — Directamente en el navegador (sin instalar nada)
+1. Descarga el repositorio como ZIP: botón verde **Code → Download ZIP**.
+2. Descomprime el archivo en tu computador.
+3. Entra a la carpeta `algotrading-page/` y abre `index.html`
+   con cualquier navegador moderno (Chrome 90+, Firefox 88+, Safari 14+, Edge 90+).
+4. Las fuentes requieren conexión a internet (se cargan desde Google Fonts).
+
+> No se requiere servidor web, Node.js ni ninguna dependencia.
+
+### Opción B — Clonar con Git
+```bash
+git clone https://github.com/TU_USUARIO/algotrading-page.git
+cd algotrading-page
+# Abrir index.html en el navegador
+open index.html        # macOS
+xdg-open index.html    # Linux / Ubuntu
+start index.html       # Windows
+```
+
+### Opción C — GitHub Pages (sin descargar nada)
+Accede directamente en el navegador:
+```
+https://TU_USUARIO.github.io/algotrading-page/
+```
 
 ---
 
