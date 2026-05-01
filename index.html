@@ -1208,9 +1208,9 @@
   <a href="#contenido-principal" class="skip-link">Saltar al contenido principal</a>
 
   <!-- ================================================
-       HEADER: Identidad y navegación del sitio
-       role="banner" identifica el encabezado del sitio
-       para tecnologías asistivas.
+       [SEMÁNTICA & a11y] El uso de <header> y <nav> define el bloque de navegación principal. 
+       Evitamos el uso de <div> genéricos para permitir que los lectores de pantalla (Screen Readers)
+       salten directamente a esta sección.
        ================================================ -->
   <header>
     <div class="header-inner">
@@ -1284,9 +1284,8 @@
   </header>
 
   <!-- ================================================
-       MAIN: Contenido principal de la página.
-       id="contenido-principal" es el destino del skip-link.
-       role="main" refuerza para agentes de usuario legacy.
+       [SEMÁNTICA] La etiqueta <main id="contenido-principal"> encapsula exclusivamente el contenido central que aporta valor, 
+        aislando el ruido visual de cabeceras y pies de página.
        ================================================ -->
   <main id="contenido-principal">
 
@@ -1365,7 +1364,7 @@
             </p>
           </div>
 
-          <!-- Imagen representativa con alt descriptivo (WCAG 1.1.1) -->
+          <!-- [a11y] Inyección de atributos 'alt' descriptivos y 'role="img"' para cumplir con el ratio de accesibilidad y describir vectores a sistemas automatizados. -->
           <div class="intro-visual">
             <img
               src="assets/chart-placeholder.svg"
@@ -1416,6 +1415,9 @@
               Ideal en mercados <em>ranging</em> (laterales). Implementaciones comunes:
               pares trading, estrategias de bandas de Bollinger con RSI de confirmación.
             </p>
+          <!-- [SEMÁNTICA & a11y] Refactorización de métricas a Listas de Definición (<dl>, <dt>, <dd>) 
+            asegurando una jerarquía clave-valor nativa y validable por la W3C. 
+          -->
             <dl class="card-metrics" aria-label="Métricas típicas de la estrategia Mean Reversion">
               <div class="metric">
                 <dt class="metric-name">Win Rate típico</dt>

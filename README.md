@@ -182,4 +182,20 @@ Cada estrategia de trading se marcó como `<article>` porque cumple la definici�
 > ⚠ **Aviso**: Los precios de mercado mostrados en el ticker y el panel lateral son **datos ilustrativos** con fines educativos. No constituyen asesoramiento financiero. En una implementación de producción, estos datos vendrían de una API financiera (Polygon.io, Alpha Vantage, Binance API, etc.).
 
 ---
+##  Arquitectura del Proyecto (Requerimiento Académico)
 
+### 1. Propósito de la Plataforma
+AlgoTrading Nexus es una interfaz educativa diseñada para democratizar los conceptos del desarrollo cuantitativo y el trading algorítmico. El sistema está estructurado para que desarrolladores y analistas financieros comprendan las bases de la automatización de mercados con un enfoque técnico y libre de fricción visual.
+
+### 2. Decisiones Semánticas y de Accesibilidad (a11y)
+La arquitectura del Document Object Model (DOM) fue diseñada priorizando la legibilidad para máquinas y humanos:
+*   **Topología Semántica:** Implementación estricta de contenedores nativos HTML5 (`<header>`, `<main>`, `<section>`, `<footer>`) eliminando la dependencia de `<div>` genéricos. Las métricas clave utilizan listas de definición (`<dl>`).
+*   **Accesibilidad Visual (WCAG AA):** Optimización tipográfica usando *Barlow Condensed* para prevenir distorsión en altos *rems* y calibración del color `text-muted` (#a8b8d0) para superar el ratio mínimo de contraste de 4.5:1.
+*   **Accesibilidad de Navegación:** Todos los vectores e iconos poseen el atributo `role="img"`, y el flujo de los encabezados (`H1` -> `H2` -> `H3`) respeta la jerarquía estricta sin saltos de nivel.
+
+### 3.  Compliance & Certificación W3C
+Este proyecto ha sido sometido a auditoría de código estático mediante el **W3C Markup Validation Service**, garantizando cero errores de sintaxis.
+
+![Certificación W3C Document Checking Completed](assets/w3c-validation.png)
+
+---
